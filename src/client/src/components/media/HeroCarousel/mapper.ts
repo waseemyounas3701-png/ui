@@ -9,9 +9,7 @@ export function toHeroSlides(mediaItems: DetailedMedia[]): HeroSlide[] {
 
             const title = isMovie ? media.title : media.name
 
-            const year = isMovie
-                ? media.release_date
-                : media.first_air_date
+            const year = isMovie ? media.release_date : media.first_air_date
 
             return {
                 title,

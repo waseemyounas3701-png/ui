@@ -36,8 +36,10 @@ export const MediaCard = React.forwardRef<HTMLDivElement, MediaCardProps>(({ tit
                         <div className="relative z-10 w-full p-3">
                             <div className="text-sm leading-tight font-semibold">{title}</div>
 
-                            <div className={"w-full flex justify-between mt-1 text-xs font-medium"}>
-                                <span className={"flex gap-2 items-center"}><Sparkles height={15} width={15} /> {rating.toFixed(1)}</span>
+                            <div className={"mt-1 flex w-full justify-between text-xs font-medium"}>
+                                <span className={"flex items-center gap-2"}>
+                                    <Sparkles height={15} width={15} /> {rating.toFixed(1)}
+                                </span>
                                 <span>{year}</span>
                             </div>
                         </div>

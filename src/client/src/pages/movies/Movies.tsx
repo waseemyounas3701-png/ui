@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectValue, SelectTrig
 
 export default function Movies() {
     const tmdb = useTmdb()
-    const [trendingRange, setTrendingRange] = useState<TrendingParams>({time_window: "day"})
+    const [trendingRange, setTrendingRange] = useState<TrendingParams>({ time_window: "day" })
     const [genres, setGenres] = useState<Genre[]>([])
     const [selectedGenre, setSelectedGenre] = useState<Genre | null>(null)
 

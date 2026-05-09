@@ -144,11 +144,7 @@ function CarouselPrevious({ className, variant = "outline", size = "icon-sm", ..
             data-slot="carousel-previous"
             variant={variant}
             size={size}
-            className={cn(
-                "absolute touch-manipulation rounded-full backdrop-blur-xl",
-                orientation === "horizontal" ? "top-1/2 -left-4" : "-top-12 left-1/2 -translate-x-1/2 rotate-90",
-                className
-            )}
+            className={cn("absolute touch-manipulation rounded-full backdrop-blur-xl", orientation === "horizontal" ? "top-1/2 -left-4" : "-top-12 left-1/2 -translate-x-1/2 rotate-90", className)}
             disabled={!canScrollPrev}
             onClick={scrollPrev}
             {...props}
@@ -168,7 +164,7 @@ function CarouselNext({ className, variant = "outline", size = "icon-sm", ...pro
             variant={variant}
             size={size}
             className={cn(
-                "absolute backdrop-blur-xl touch-manipulation rounded-full",
+                "absolute touch-manipulation rounded-full backdrop-blur-xl",
                 orientation === "horizontal" ? "top-1/2 -right-4 -translate-y-1/2" : "-bottom-12 left-1/2 -translate-x-1/2 rotate-90",
                 className
             )}
