@@ -9,6 +9,7 @@ import { useAppSettings } from "@/hooks/use-appsettings.ts"
 import { useIsMobile } from "@/hooks/use-mobile.ts"
 import { useOmss } from "@/hooks/use-omss"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
+import Favicon from "./Favicon"
 
 export default function Header() {
     const { t } = useTranslation(["header", "common", "settings"])
@@ -24,8 +25,8 @@ export default function Header() {
                     {/* LEFT */}
                     <div className="flex flex-1 items-center gap-2">
                         <Link to="/" className="group inline-flex items-center gap-2">
-                            <span className="inline-flex size-10 items-center justify-center overflow-hidden shadow-lg transition-transform duration-300 group-hover:scale-105">
-                                <img src="/favicon.svg" alt="CinePro logo" className="size-full object-cover" />
+                            <span className="inline-flex size-10 items-center justify-center overflow-hidden transition-transform duration-300 group-hover:scale-105">
+                                <Favicon/>
                             </span>
 
                             <span className="text-2xl font-semibold tracking-tight">{t("common:projectName")}</span>

@@ -219,7 +219,6 @@
 }
 
 /* ── Color theme swatches ─────────────────────────────────── */
-.swatch-orange { background-color: oklch(0.6172 0.2134 24.6); }
 .swatch-red    { background-color: oklch(0.62 0.25 15); }
 .swatch-rose   { background-color: oklch(0.65 0.22 340); }
 .swatch-purple { background-color: oklch(0.62 0.22 285); }
