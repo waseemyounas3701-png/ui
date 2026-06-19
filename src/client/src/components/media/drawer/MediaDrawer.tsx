@@ -16,18 +16,16 @@ import { useMediaDrawer } from "@/components/media/drawer/hooks/useMediaDrawer.t
 
 interface MediaDrawerProps {
     payload: MediaDrawerPayload
-    depth: number
+    canGoBack: boolean
     isOpen: boolean
     className?: string
 }
 
-export function MediaDrawer({ payload, depth, isOpen, className }: MediaDrawerProps) {
+export function MediaDrawer({ payload, canGoBack, isOpen, className }: MediaDrawerProps) {
     const { data, isLoading } = useMediaDetails(payload.type, payload.id)
-    const { closeAll, close, stack } = useMediaDrawer()
+    const { closeAll, close } = useMediaDrawer()
 
     const navigate = useNavigate()
-
-    const canGoBack = depth === 0 && stack.length > 1
 
     const handlePlay = () => {
         if (!data) return
