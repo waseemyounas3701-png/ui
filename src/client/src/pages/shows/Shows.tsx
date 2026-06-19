@@ -2,7 +2,7 @@ import { useTmdb } from "@/hooks/use-tmdb"
 import { HeroCarousel } from "@/components/media/HeroCarousel/HeroCarousel"
 import { HeroFade } from "@/components/media/HeroCarousel/HeroFade"
 import { TvRail } from "@/components/media/MediaRail/TypedRails.tsx"
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import type { Genre, TrendingParams } from "@lorenzopant/tmdb"
 import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select.tsx"
@@ -35,9 +35,17 @@ export default function Shows() {
         }
     }, [tmdb.genres])
 
+    // Performance reason: stable fetcher identities so switching the trending range or
+    // genre doesn't re-trigger network fetches for the unrelated rails below.
+    const fetchHero = useCallback(() => Promise.all([tmdb.tv_lists.popular()]), [tmdb])
+    const fetchTrending = useCallback(() => tmdb.trending.tv(trendingRange), [tmdb, trendingRange])
+    const fetchByGenre = useCallback(() => tmdb.discover.tv({ with_genres: selectedGenre?.id }), [tmdb, selectedGenre])
+    const fetchPopular = useCallback(() => tmdb.tv_lists.popular({}), [tmdb])
+    const fetchTopRated = useCallback(() => tmdb.tv_lists.top_rated(), [tmdb])
+
     return (
         <div className="min-h-screen overflow-hidden">
-            <HeroCarousel tmdb={tmdb} fetcher={() => Promise.all([tmdb.tv_lists.popular()])} />
+            <HeroCarousel tmdb={tmdb} fetcher={fetchHero} />
 
             <HeroFade />
 
@@ -56,7 +64,7 @@ export default function Shows() {
                             </div>
                         </div>
                     }
-                    fetcher={() => tmdb.trending.tv(trendingRange)}
+                    fetcher={fetchTrending}
                 />
 
                 <TvRail
@@ -90,12 +98,12 @@ export default function Shows() {
                             </Select>
                         </div>
                     }
-                    fetcher={() => tmdb.discover.tv({ with_genres: selectedGenre?.id })}
+                    fetcher={fetchByGenre}
                 />
 
-                <TvRail title="Popular TV Shows" fetcher={() => tmdb.tv_lists.popular({})} />
+                <TvRail title="Popular TV Shows" fetcher={fetchPopular} />
 
-                <TvRail title="Top Rated TV Shows" fetcher={() => tmdb.tv_lists.top_rated()} />
+                <TvRail title="Top Rated TV Shows" fetcher={fetchTopRated} />
             </section>
         </div>
     )
