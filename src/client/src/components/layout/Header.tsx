@@ -1,103 +1,95 @@
+import { useId } from "react"
 import { Button } from "@/components/ui/button"
+import { useElementSize } from "@/hooks/use-element-size"
 import { SearchDialog } from "@/components/layout/SearchDialog.tsx"
 import { LucideGlobeLock, LucideGlobeX, LucideSearch, Settings2 } from "lucide-react"
-import { Kbd } from "@/components/ui/kbd"
-import { SidebarTrigger } from "@/components/ui/sidebar.tsx"
-import { Link, useNavigate } from "react-router-dom"
+import { Link, useLocation, useNavigate } from "react-router-dom"
 import { useTranslation } from "react-i18next"
 import { useAppSettings } from "@/hooks/use-appsettings.ts"
-import { useIsMobile } from "@/hooks/use-mobile.ts"
 import { useOmss } from "@/hooks/use-omss"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
+import { GlassFilter } from "@/components/ui/glass-filter"
 import Favicon from "./Favicon"
+
+const NAV_LINKS = [
+    { to: "/", labelKey: "common:home" },
+    { to: "/movies", labelKey: "common:movie.plural" },
+    { to: "/shows", labelKey: "common:tvShow.plural" },
+    { to: "/discover", labelKey: "common:discover" },
+] as const
+
+const iconButtonClass = "text-white/70 hover:bg-white/10 hover:text-white"
 
 export default function Header() {
     const { t } = useTranslation(["header", "common", "settings"])
     const { setShowSearch, showSearch } = useAppSettings()
     const { valid } = useOmss()
     const navigate = useNavigate()
-    const isMobile = useIsMobile()
+    const location = useLocation()
+    const [glassRef, { width: glassWidth, height: glassHeight }] = useElementSize<HTMLDivElement>()
+    const filterId = `header-glass-${useId().replace(/:/g, "")}`
+    const hasGlassSize = glassWidth > 0 && glassHeight > 0
 
     return (
         <>
-            <header className="fixed top-0 left-0 z-19 w-full py-3">
-                <div className="mx-auto flex h-16 w-[min(92vw,1240px)] items-center rounded-2xl border bg-background/20 px-4 backdrop-blur-xl sm:px-5 lg:px-6">
-                    {/* LEFT */}
-                    <div className="flex flex-1 items-center gap-2">
-                        <Link to="/" className="group inline-flex items-center gap-2">
-                            <span className="inline-flex size-10 items-center justify-center overflow-hidden transition-transform duration-300 group-hover:scale-105">
-                                <Favicon />
-                            </span>
+            <header className="fixed top-0 left-0 z-19 flex w-full justify-center py-4">
+                <div
+                    ref={glassRef}
+                    className="relative inline-flex items-center gap-1 overflow-hidden rounded-full bg-black/20 px-1.5 py-1.5 shadow-[inset_0_0_0_0.5px_rgba(255,255,255,0.1),0_4px_16px_rgba(0,0,0,0.1),0_8px_24px_rgba(0,0,0,0.08)] transition-opacity duration-[260ms] ease-out"
+                    style={hasGlassSize ? { backdropFilter: `url(#${filterId}) saturate(1)` } : undefined}
+                >
+                    {/* Logo */}
+                    <Link to="/" className="mr-1 flex items-center px-2">
+                        <Favicon className="h-12 w-auto text-primary" />
+                    </Link>
 
-                            <span className="text-2xl font-semibold tracking-tight">{t("common:projectName")}</span>
-                        </Link>
-                        {!isMobile && <SidebarTrigger />}
+                    {/* Nav links (hidden below sm to avoid overflowing the pill on narrow screens) */}
+                    <div className="hidden items-center sm:flex">
+                        {NAV_LINKS.map((link) => {
+                            const active = location.pathname === link.to
+                            return (
+                                <Link key={link.to} to={link.to} className="relative px-4 py-2">
+                                    <span className={`relative z-10 text-sm font-medium transition-colors ${active ? "text-white" : "text-white/70 hover:text-white"}`}>{t(link.labelKey)}</span>
+                                    <div className={`absolute inset-0 rounded-full bg-white/15 transition-opacity ${active ? "opacity-100" : "opacity-0"}`} />
+                                </Link>
+                            )
+                        })}
                     </div>
 
-                    {/* CENTER SEARCH */}
-                    {!isMobile && (
-                        <div className="hidden w-56 flex-1 sm:block md:w-72 lg:w-96">
-                            <Button variant="outline" onClick={() => setShowSearch(!showSearch)} className="h-9 w-full justify-between px-3 text-sm">
-                                <span className="inline-flex items-center gap-2 text-muted-foreground">
-                                    <LucideSearch className="size-4" />
-                                    <span className="hidden sm:inline">{t("searchPlaceholder")}</span>
-                                </span>
+                    {/* Actions */}
+                    <div className="flex items-center gap-1 px-1">
+                        <Button variant="ghost" size="icon" className={iconButtonClass} onClick={() => setShowSearch(!showSearch)} aria-label={t("header:searchPlaceholder")}>
+                            <LucideSearch className="size-5" />
+                        </Button>
 
-                                <span className="hidden items-center gap-1 md:flex">
-                                    <Kbd>⌘</Kbd>+<Kbd>F</Kbd>
-                                </span>
-                            </Button>
-                        </div>
-                    )}
-
-                    {/* RIGHT */}
-                    <div className="flex flex-1 items-center justify-end gap-2">
-                        {isMobile && (
-                            <>
-                                <Button variant="ghost" size="icon" onClick={() => setShowSearch(!showSearch)}>
-                                    <LucideSearch className="size-5" />
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <Button variant="ghost" size="icon" className={`${iconButtonClass} ${valid ? "hover:cursor-default" : ""}`} onClick={() => navigate("/settings?tab=omss")}>
+                                    {valid ? <LucideGlobeLock className="size-5" /> : <LucideGlobeX className="size-5" />}
                                 </Button>
-                                <SidebarTrigger />
-                            </>
-                        )}
+                            </TooltipTrigger>
+                            <TooltipContent className="text-center">
+                                {valid ? (
+                                    "You are connected to your OMSS Server!"
+                                ) : (
+                                    <>
+                                        You are not connected to any OMSS Server!
+                                        <br />
+                                        Click me to connect to one.
+                                    </>
+                                )}
+                            </TooltipContent>
+                        </Tooltip>
 
-                        {!isMobile && (
-                            <>
-                                <Tooltip>
-                                    <TooltipTrigger asChild>
-                                        <Button
-                                            size={"icon-lg"}
-                                            variant={"ghost"}
-                                            className={`hover:text-primary ${valid ? "hover:cursor-default" : ""}`}
-                                            onClick={() => {
-                                                navigate("/settings?tab=omss")
-                                            }}
-                                        >
-                                            {valid ? <LucideGlobeLock /> : <LucideGlobeX />}
-                                        </Button>
-                                    </TooltipTrigger>
-                                    <TooltipContent className="text-center">
-                                        {valid ? (
-                                            "You are connected to your OMSS Server!"
-                                        ) : (
-                                            <>
-                                                You are not connected to any OMSS Server!
-                                                <br />
-                                                Click me to connect to one.
-                                            </>
-                                        )}
-                                    </TooltipContent>
-                                </Tooltip>
-                                <Button asChild variant="outline">
-                                    <Link to="/settings" className="inline-flex items-center gap-1.5">
-                                        <Settings2 className="size-4" />
-                                        {t("settings:title")}
-                                    </Link>
-                                </Button>
-                            </>
-                        )}
+                        <Button asChild variant="ghost" size="icon" className={iconButtonClass}>
+                            <Link to="/settings" aria-label={t("settings:title")}>
+                                <Settings2 className="size-5" />
+                            </Link>
+                        </Button>
                     </div>
                 </div>
+
+                {hasGlassSize && <GlassFilter id={filterId} width={glassWidth} height={glassHeight} radius={glassHeight / 2} />}
             </header>
 
             <SearchDialog />

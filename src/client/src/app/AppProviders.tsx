@@ -2,7 +2,6 @@ import { TooltipProvider } from "@/components/ui/tooltip"
 import { type ReactNode } from "react"
 import { OmssProvider } from "@/app/providers/omss-provider"
 import { TMDBProvider } from "@/app/providers/tmdb-provider"
-import { SidebarProvider } from "@/components/ui/sidebar"
 import { ThemeProvider } from "@/app/providers/theme-provider"
 import { ColorThemeProvider } from "@/app/providers/color-theme-provider"
 import { HistoryProvider } from "@/app/providers/history-provider"
@@ -19,11 +18,9 @@ export default function AppProviders({ children }: { children: ReactNode }) {
                     <TMDBProvider>
                         <OmssProvider>
                             <HistoryProvider>
-                                <SidebarProvider defaultOpen={false}>
-                                    <BrowserRouter>
-                                        <MediaDrawerProvider>{children}</MediaDrawerProvider>
-                                    </BrowserRouter>
-                                </SidebarProvider>
+                                <BrowserRouter>
+                                    <MediaDrawerProvider>{children}</MediaDrawerProvider>
+                                </BrowserRouter>
                             </HistoryProvider>
                         </OmssProvider>
                     </TMDBProvider>

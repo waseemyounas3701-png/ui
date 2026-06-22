@@ -19,12 +19,15 @@ export default function StartupOverlay() {
 
         let timer: number
 
+        // Performance reason: the splash previously blocked real content behind a blur for
+        // 4.5s on every first visit of a session. Keeping the brand moment but cutting the
+        // artificial wait makes the app feel far less "heavy" without removing the splash.
         if (phase === "loading") {
-            timer = window.setTimeout(() => setPhase("brand"), 2000)
+            timer = window.setTimeout(() => setPhase("brand"), 600)
         } else if (phase === "brand") {
-            timer = window.setTimeout(() => setPhase("closing"), 2000)
+            timer = window.setTimeout(() => setPhase("closing"), 900)
         } else if (phase === "closing") {
-            timer = window.setTimeout(() => setPhase("done"), 500)
+            timer = window.setTimeout(() => setPhase("done"), 350)
         }
 
         return () => clearTimeout(timer)
