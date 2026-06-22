@@ -18,9 +18,9 @@ export default function AppProviders({ children }: { children: ReactNode }) {
                     <TMDBProvider>
                         <OmssProvider>
                             <HistoryProvider>
-                                    <BrowserRouter>
-                                        <MediaDrawerProvider>{children}</MediaDrawerProvider>
-                                    </BrowserRouter>
+                                <BrowserRouter>
+                                    <MediaDrawerProvider>{children}</MediaDrawerProvider>
+                                </BrowserRouter>
                             </HistoryProvider>
                         </OmssProvider>
                     </TMDBProvider>

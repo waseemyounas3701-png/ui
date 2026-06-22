@@ -1,7 +1,17 @@
 import { useEffect, useState } from "react"
 import { toast } from "sonner"
 import { ChevronDownIcon, ShuffleIcon } from "lucide-react"
-import type { CountryISO3166_1, DiscoverMovieParams, DiscoverMovieSortBy, DiscoverTVParams, DiscoverTVSortBy, Genre, MovieResultItem, DiscoverTVResultItem, WatchProviderListItem } from "@lorenzopant/tmdb"
+import type {
+    CountryISO3166_1,
+    DiscoverMovieParams,
+    DiscoverMovieSortBy,
+    DiscoverTVParams,
+    DiscoverTVSortBy,
+    Genre,
+    MovieResultItem,
+    DiscoverTVResultItem,
+    WatchProviderListItem,
+} from "@lorenzopant/tmdb"
 import { useTmdb } from "@/hooks/use-tmdb"
 import { useAppSettings } from "@/hooks/use-appsettings.ts"
 import { useMediaDrawer } from "@/components/media/drawer/hooks/useMediaDrawer"
@@ -343,7 +353,13 @@ export default function Discover() {
                         <ComboboxInput placeholder="Movies" className="w-40" />
                         <ComboboxContent>
                             <ComboboxEmpty>No matches</ComboboxEmpty>
-                            <ComboboxList>{(item: (typeof MEDIA_KIND_OPTIONS)[number]) => <ComboboxItem key={item.value} value={item}>{item.label}</ComboboxItem>}</ComboboxList>
+                            <ComboboxList>
+                                {(item: (typeof MEDIA_KIND_OPTIONS)[number]) => (
+                                    <ComboboxItem key={item.value} value={item}>
+                                        {item.label}
+                                    </ComboboxItem>
+                                )}
+                            </ComboboxList>
                         </ComboboxContent>
                     </Combobox>
 

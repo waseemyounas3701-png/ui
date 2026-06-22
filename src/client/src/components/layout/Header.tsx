@@ -64,12 +64,7 @@ export default function Header() {
 
                         <Tooltip>
                             <TooltipTrigger asChild>
-                                <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    className={`${iconButtonClass} ${valid ? "hover:cursor-default" : ""}`}
-                                    onClick={() => navigate("/settings?tab=omss")}
-                                >
+                                <Button variant="ghost" size="icon" className={`${iconButtonClass} ${valid ? "hover:cursor-default" : ""}`} onClick={() => navigate("/settings?tab=omss")}>
                                     {valid ? <LucideGlobeLock className="size-5" /> : <LucideGlobeX className="size-5" />}
                                 </Button>
                             </TooltipTrigger>
